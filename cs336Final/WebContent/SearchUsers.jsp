@@ -9,6 +9,9 @@
 <title>Found Users</title>
 </head>
 <body>
+<div class="home-button">
+	<a href="RepresentativeScreen.jsp">Go back to Home Screen</a>
+</div>
 <%
 	String searchUsers = request.getParameter("searchField");
     boolean found = false;

@@ -8,6 +8,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>User Account Overview</title>
 </head>
+<div class="home-button">
+	<a href="RepresentativeScreen.jsp">Go back to Home Screen</a>
+</div>
 <body>
 	<%
 		int UserID = -1;
@@ -121,13 +124,14 @@
                 <th>Vehicle Description</th>
             </tr>
             <%
-            
+            	boolean auctionsfound2 = false;
             	String str2 = "SELECT i.Item_ID, i.Initial_Price, i.Current_Price, i.Secret_Min, i.Vehicle_Type FROM Item_Auction i WHERE i.Seller_ID=?";
             	PreparedStatement ps2 = con.prepareStatement(str2);
             	ps2.setInt(1, UserID);
             	ResultSet auctions = ps2.executeQuery();
             
             	while(auctions.next()){
+            		auctionsfound2 = true;
             		int ItemID2 = auctions.getInt("Item_ID");
             		Float InitialPrice = auctions.getFloat("Initial_Price");
             		Float CurrentPrice = auctions.getFloat("Initial_Price");
@@ -146,7 +150,7 @@
             <%
     		 	}
                 auctions.close(); // Close the current ResultSet
-            if (!auctionfound) {
+            if (!auctionsfound2) {
             %>
             <tr>
                 <td>No Auctions Found For User</td>
