@@ -47,11 +47,20 @@
 	<div>
 		<h3>Delete Account?</h3>
 		
-		<form method="post" action="DeleteAttempt.jsp">
+		<form method="post" action="DeleteAttemptRep.jsp">
 			<input type="hidden" name="DeletionMode" value="Staff">
-			<input type="hidden" name="Username" value=<%=request.getParameter("Username")%>>
+			<input type="hidden" name="Username" value=<%=Username%>>
             <input type="submit" value="Delete Account" name="Delete" onclick="return confirm('Are you sure you want to continue?')">
         </form>
+        
+        <h3>Change Password?</h3>
+        <form method="post" action="ChangePassword.jsp">
+			<input type="text" name="Password" value="New Password"
+				onfocus="this.value==this.defaultValue?this.value='':null"/>
+			<input type="hidden" name="Username" value=<%=Username%>>
+            <input type="submit" value="Change Password" name="Delete" onclick="return confirm('Are you sure you want to continue?')">
+        </form>
+
 	</div>
 	
 	<%
@@ -111,7 +120,7 @@
 		<form method="post" action="DeleteItem.jsp">
 						
                 		<input type="hidden" name="DeletionType" value="Item">
-                		<input type="text" name="ItemID2" value="Enter Auction ID Here"
+                		<input type="text" name="ItemID" value="Enter Auction ID Here"
                 			onfocus="this.value==this.defaultValue?this.value='':null"/>
                 		<input type="submit" value="Delete Auction" name="Item" onclick="return confirm('Are you sure you want to continue?')">
         </form>
@@ -124,6 +133,7 @@
                 <th>Vehicle Description</th>
             </tr>
             <%
+            	//out.println(session.getAttribute("ItemEntered") + " " + session.getAttribute("ItemEntered2") + " " + session.getAttribute("ReachedAuction"));
             	boolean auctionsfound2 = false;
             	String str2 = "SELECT i.Item_ID, i.Initial_Price, i.Current_Price, i.Secret_Min, i.Vehicle_Type FROM Item_Auction i WHERE i.Seller_ID=?";
             	PreparedStatement ps2 = con.prepareStatement(str2);
