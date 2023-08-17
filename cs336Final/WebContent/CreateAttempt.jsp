@@ -42,15 +42,22 @@
     				<%
                 } else {
                     // Insert new user into the database
-                    PreparedStatement insertStmt = con.prepareStatement("INSERT INTO end_users (username, user_password) VALUES (?, ?)");
+                    PreparedStatement insertStmt = con.prepareStatement("INSERT INTO end_users (username, user_password, Total_Earnings) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
                     insertStmt.setString(1, username);
                     insertStmt.setString(2, password);
+                    insertStmt.setDouble(3,0.0);
                     int rowsInserted = insertStmt.executeUpdate();
+                    ResultSet key = insertStmt.getGeneratedKeys();
+                    int keys = -1;
+                    if (key.next()) {
+                    	keys = key.getInt(1);
+                    }
                     if (rowsInserted > 0) {
    						 %>
                         <p>User created successfully.</p>
     					<%
     					session.setAttribute("user", username);
+    					session.setAttribute("User_ID",keys);
     					response.sendRedirect("HomeScreen.jsp");
                     } else {
    	 					%>
@@ -64,6 +71,7 @@
                 checkStmt.close();
                 con.close();
             } catch (SQLException e) {
+            	out.print(e);
     			%>
                 <p>Error connecting to the database.</p>
     			<%

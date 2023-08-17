@@ -39,13 +39,13 @@
 			//Runs search on all user auctions to find all bids associated
 			 while (auction.next()) {
 				int Auction_ID = (int) auction.getInt("Item_ID");
-				String Find_Bid_ID = "SELECT b.Item_ID FROM Bids b WHERE b.Item_ID=?";
+				String Find_Bid_ID = "SELECT b.Bid_ID FROM Bids b WHERE b.Item_ID=?";
 				PreparedStatement ps_ID3 = con.prepareStatement(Find_Bid_ID);
 				ps_ID3.setInt(1, Auction_ID);
 				ResultSet bid = ps_ID3.executeQuery();
 				//Deletes all bids associated with soon-to-be deleted auction
 				while(bid.next()) {
-					int Bid_ID = bid.getInt("Item_ID");
+					int Bid_ID = bid.getInt("Bid_ID");
 					String Delete_Bid_ID = "DELETE FROM Bids b WHERE b.Bid_ID=?";
 					PreparedStatement ps_ID5 = con.prepareStatement(Delete_Bid_ID);
 					ps_ID5.setInt(1, Bid_ID);

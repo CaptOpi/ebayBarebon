@@ -18,6 +18,53 @@
 		} else {
 			out.println("Username:" + " " + session.getAttribute("user"));
 		}
+	ApplicationDB db = new ApplicationDB();	
+	Connection con = db.getConnection();
+	String expiredItem = "SELECT * FROM Item_Auction WHERE Close_Date < CURDATE() OR (Close_Date = CURDATE() AND Close_Time < CURTIME())";
+	PreparedStatement expiredItems = con.prepareStatement(expiredItem);
+	ResultSet expiredItemsResult = expiredItems.executeQuery();
+	while(expiredItemsResult.next()) {
+		int itemID = expiredItemsResult.getInt("Item_ID");
+		double reserve = expiredItemsResult.getDouble("Secret_Min");
+		double currentPrice = expiredItemsResult.getDouble("Current_Price");
+		double soldPrice = expiredItemsResult.getDouble("Sold_Price");
+		int sellerID = expiredItemsResult.getInt("Seller_ID");
+		if(currentPrice >= reserve && currentPrice != soldPrice){
+			String findBuyer = "SELECT Buyer_ID, Amount FROM Bids WHERE Item_ID = ? ORDER BY Amount DESC LIMIT 1";
+			PreparedStatement findBuyers = con.prepareStatement(findBuyer);
+			findBuyers.setInt(1,itemID);
+			ResultSet findResult = findBuyers.executeQuery();
+			int buyerID = -1;
+			while(findResult.next()) {
+				buyerID = findResult.getInt("Buyer_ID");
+			}
+			findBuyers.close();
+			findResult.close();
+			String updatePrice = "UPDATE Item_Auction SET Sold_Price = ? WHERE Item_ID = ?";
+			PreparedStatement updatedPrice = con.prepareStatement(updatePrice);
+			updatedPrice.setDouble(1,currentPrice);
+			updatedPrice.setDouble(2,itemID);
+			updatedPrice.executeUpdate();
+			updatedPrice.close();
+			
+			String insertBuyer = "INSERT INTO Buyers (User_ID, Item_ID, Sold_Price) VALUES (?,?,?)";
+			PreparedStatement insert = con.prepareStatement(insertBuyer);
+			insert.setInt(1,buyerID);
+			insert.setInt(2,itemID);
+			insert.setDouble(3,currentPrice);
+			insert.executeUpdate();
+			insert.close();
+			
+			String updateEarnings = "UPDATE End_Users SET Total_Earnings = Total_Earnings + ? WHERE User_ID = ?";
+			PreparedStatement update = con.prepareStatement(updateEarnings);
+			update.setDouble(1,currentPrice);
+			update.setInt(2,sellerID);
+			update.executeUpdate();
+			update.close();
+		}
+	}
+	expiredItems.close();
+	expiredItemsResult.close();
 	%>
 	<p/>
 </div>

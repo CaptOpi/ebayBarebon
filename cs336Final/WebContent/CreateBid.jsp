@@ -56,7 +56,6 @@
         PreparedStatement checkExistingBidStatement = connection.prepareStatement(checkExistingBidQuery);
         checkExistingBidStatement.setInt(1, itemID);
         ResultSet maxBidResult = checkExistingBidStatement.executeQuery();
-        
         if (maxBidResult.next()) {
             double maxBidAmount = maxBidResult.getDouble("MaxAmount");
             
@@ -84,7 +83,7 @@
         if (resultUpper.next()) {
         	 double upperLimits = resultUpper.getDouble("Upper_Limit");
         	 int autoBuyer = resultUpper.getInt("Buyer_ID");
-        	 if (upperLimits > bidAmount ) {
+        	 if (upperLimits > bidAmount && buyerID != autoBuyer ) {
              	String autoBid = "INSERT INTO `Bids` (Amount, Buyer_ID, Item_ID) VALUES(?,?,?)";
              	PreparedStatement auto = connection.prepareStatement(autoBid);
              	auto.setDouble(1, bidAmount + 100);
@@ -120,6 +119,7 @@
 		
         response.sendRedirect("HomeScreen.jsp");
     } catch (Exception e) {
+    	out.print(e);
         response.sendRedirect("HomeScreen.jsp");
     }
     %>

@@ -30,8 +30,8 @@
     String formattedTime = newDateTime.format(timeFormatter);
     ApplicationDB db = new ApplicationDB();	
 	Connection con = db.getConnection();
-	String sqlStatement = "INSERT INTO Item_Auction (Vehicle_Type,Vehicle_Make,Vehicle_Color,Vehicle_Year, Vehicle_Condition,Vehicle_Mileage, Vehicle_MPG, Initial_Price, Current_Price, Secret_Min, Increment_Amt,Close_Date,Close_Time,Seller_ID)" +
-	    	"VALUE (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+	String sqlStatement = "INSERT INTO Item_Auction (Vehicle_Type,Vehicle_Make,Vehicle_Color,Vehicle_Year, Vehicle_Condition,Vehicle_Mileage, Vehicle_MPG, Initial_Price, Current_Price, Secret_Min, Increment_Amt,Close_Date,Close_Time,Seller_ID,Sold_Price)" +
+	    	"VALUE (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	PreparedStatement preparedStatement = con.prepareStatement(sqlStatement);
 	String checkStatement = "SELECT Alert_ID, Vehicle_Type, Vehicle_Make, Vehicle_Color, Vehicle_Condition, Alerted FROM Alerts";
     PreparedStatement stmt = con.prepareStatement(checkStatement);
@@ -81,6 +81,7 @@
     	preparedStatement.setString(12,formattedDate);
     	preparedStatement.setString(13,formattedTime);
     	preparedStatement.setInt(14,userID);
+    	preparedStatement.setDouble(15,0.0);
     	preparedStatement.executeUpdate();
     	preparedStatement.close();
     	results = stmt.executeQuery();

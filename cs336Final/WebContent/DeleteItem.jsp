@@ -13,7 +13,7 @@
 	try{
 		ApplicationDB db = new ApplicationDB();
     	Connection con = db.getConnection();
-		Integer ItemID = Integer.parseInt(request.getParameter("ItemID2"));
+		int ItemID = Integer.parseInt(request.getParameter("ItemID2"));
 		session.setAttribute("ItemEntered", ItemID);
     	
     	
