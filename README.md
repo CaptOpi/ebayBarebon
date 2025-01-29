@@ -1,6 +1,6 @@
 # ebayBarebone
 
-**CS336 Final (Clone of Ebay Backend)**
+**CS336 Final**
 
 ## Introduction
 
